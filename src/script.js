@@ -1250,56 +1250,68 @@ function loadAndSortData() {
         }
         
         // --- 主題切換 ---
-		function applyTheme() {
-		    const htmlEl = document.documentElement;
-		    if (!htmlEl) return;
-		
-		    // 簡化後的邏輯：如果不是'light'，就當作是dark。
-		    // 這也包含了新訪客 (localStorage 為 null) 的情況，會預設為深色。
-		    const isDark = localStorage.getItem('theme') !== 'light';
-		
-		    htmlEl.classList.toggle(CSS_CLASSES.DARK_MODE, isDark);
-		    updateThemeButtonsUI();
-		
-		    // 更新圖表顏色的部分保持不變
-		    if (rocketChartInstance && domElements.ROCKET_STATS_MODAL && domElements.ROCKET_STATS_MODAL.style.display === 'flex') {
-		        const isDarkModeNow = htmlEl.classList.contains(CSS_CLASSES.DARK_MODE);
-		        const gridColor = getComputedStyle(document.documentElement).getPropertyValue(isDarkModeNow ? '--chart-grid-color-dark' : '--chart-grid-color-light').trim();
-		        const tickColor = getComputedStyle(document.documentElement).getPropertyValue(isDarkModeNow ? '--chart-tick-color-dark' : '--chart-tick-color-light').trim();
-		        const legendColor = getComputedStyle(document.documentElement).getPropertyValue(isDarkModeNow ? '--chart-legend-color-dark' : '--chart-legend-color-light').trim();
-		
-		        rocketChartInstance.options.scales.x.ticks.color = tickColor;
-		        rocketChartInstance.options.scales.x.grid.color = gridColor;
-		        rocketChartInstance.options.scales.y.ticks.color = tickColor;
-		        rocketChartInstance.options.scales.y.grid.color = gridColor;
-		        rocketChartInstance.options.plugins.legend.labels.color = legendColor;
-		        rocketChartInstance.options.plugins.tooltip.backgroundColor = isDarkModeNow ? 'rgba(18,18,18,0.9)' : 'rgba(244,245,245,0.9)';
-		        rocketChartInstance.options.plugins.tooltip.titleColor = isDarkModeNow ? '#e4e4e7' : '#27272a';
-		        rocketChartInstance.options.plugins.tooltip.bodyColor = isDarkModeNow ? '#e4e4e7' : '#27272a';
-		        rocketChartInstance.data.datasets[0].pointBorderColor = isDarkModeNow ? '#121212' : '#f4f4f5';
-		        rocketChartInstance.update();
-		    }
-		}
-		
-		function updateThemeButtonsUI() {
-		    const themeToggleButton = document.getElementById('themeToggleButton');
-		    if (!themeToggleButton) return;
-		
-		    const currentTheme = localStorage.getItem('theme') || 'dark';
-		
+        function applyTheme() {
+            const htmlEl = document.documentElement;
+            if (!htmlEl) return;
+
+            // --- 修改後的邏輯 ---
+            // 1. 檢查使用者是否手動設定過主題
+            const storedTheme = localStorage.getItem('theme');
+            let isDark;
+
+            if (storedTheme) {
+                // 如果有手動設定，就依設定為主
+                isDark = (storedTheme === 'dark');
+            } else {
+                // 如果沒有手動設定 (新訪客)，就跟隨瀏覽器的偏好
+                isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            }
+            // --- 修改結束 ---
+
+            htmlEl.classList.toggle(CSS_CLASSES.DARK_MODE, isDark);
+            updateThemeButtonsUI();
+
+            // 更新圖表顏色的部分保持不變
+            if (rocketChartInstance && domElements.ROCKET_STATS_MODAL && domElements.ROCKET_STATS_MODAL.style.display === 'flex') {
+                const isDarkModeNow = htmlEl.classList.contains(CSS_CLASSES.DARK_MODE);
+                const gridColor = getComputedStyle(document.documentElement).getPropertyValue(isDarkModeNow ? '--chart-grid-color-dark' : '--chart-grid-color-light').trim();
+                const tickColor = getComputedStyle(document.documentElement).getPropertyValue(isDarkModeNow ? '--chart-tick-color-dark' : '--chart-tick-color-light').trim();
+                const legendColor = getComputedStyle(document.documentElement).getPropertyValue(isDarkModeNow ? '--chart-legend-color-dark' : '--chart-legend-color-light').trim();
+
+                rocketChartInstance.options.scales.x.ticks.color = tickColor;
+                rocketChartInstance.options.scales.x.grid.color = gridColor;
+                rocketChartInstance.options.scales.y.ticks.color = tickColor;
+                rocketChartInstance.options.scales.y.grid.color = gridColor;
+                rocketChartInstance.options.plugins.legend.labels.color = legendColor;
+                rocketChartInstance.options.plugins.tooltip.backgroundColor = isDarkModeNow ? 'rgba(18,18,18,0.9)' : 'rgba(244,245,245,0.9)';
+                rocketChartInstance.options.plugins.tooltip.titleColor = isDarkModeNow ? '#e4e4e7' : '#27272a';
+                rocketChartInstance.options.plugins.tooltip.bodyColor = isDarkModeNow ? '#e4e4e7' : '#27272a';
+                rocketChartInstance.data.datasets[0].pointBorderColor = isDarkModeNow ? '#121212' : '#f4f4f5';
+                rocketChartInstance.update();
+            }
+        }
+
+        function updateThemeButtonsUI() {
+            const themeToggleButton = document.getElementById('themeToggleButton');
+            if (!themeToggleButton) return;
+
+            // --- 修改後的邏輯 ---
+            // 直接檢查 HTML 元素上是否有 'dark-mode' class 來判斷當前主題
+            const isCurrentlyDark = document.documentElement.classList.contains(CSS_CLASSES.DARK_MODE);
+
             // 定義SVG圖示
-		    const sunIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: inline-block; vertical-align: -3px; margin-right: 0.4rem;"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
-		    const moonIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: inline-block; vertical-align: -3px; margin-right: 0.4rem;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
-		
-		    // 顯示當前的模式
-			if (currentTheme === 'dark') {
-			    // 當前為深色模式時，顯示深色模式的文字
-			    themeToggleButton.innerHTML = moonIcon + translations.themeBtnDarkText[currentLang];
-			} else {
-			    // 當前為淺色模式時，顯示淺色模式的文字
-			    themeToggleButton.innerHTML = sunIcon + translations.themeBtnLightText[currentLang];
-			}
-		}
+            const sunIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: inline-block; vertical-align: -3px; margin-right: 0.4rem;"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>`;
+            const moonIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: inline-block; vertical-align: -3px; margin-right: 0.4rem;"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>`;
+
+            // 根據當前是否為深色模式來顯示對應的文字和圖示
+            if (isCurrentlyDark) {
+                // 當前為深色模式時，顯示深色模式的文字
+                themeToggleButton.innerHTML = moonIcon + translations.themeBtnDarkText[currentLang];
+            } else {
+                // 當前為淺色模式時，顯示淺色模式的文字
+                themeToggleButton.innerHTML = sunIcon + translations.themeBtnLightText[currentLang];
+            }
+        }
 
 		function setupFab() {
 		    const fabContainer = document.getElementById('fabContainer');
@@ -1593,19 +1605,24 @@ function loadAndSortData() {
                 navObserver.observe(SITE_HERO);
             }
 
-		// 新的佈景主題切換按鈕事件監聽
-		const themeToggleButton = document.getElementById('themeToggleButton');
-		if (themeToggleButton) {
-		    themeToggleButton.addEventListener('click', () => {
-		        // 偵測目前是哪個模式
-		        const currentTheme = localStorage.getItem('theme') || 'dark';
-		        // 設定成相反的模式
-		        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-		        localStorage.setItem('theme', newTheme);
-		        // 套用新模式（這個函式會自動更新畫面和按鈕文字）
-		        applyTheme();
-		    });
-		}
+            // 新的佈景主題切換按鈕事件監聽
+            const themeToggleButton = document.getElementById('themeToggleButton');
+            if (themeToggleButton) {
+                themeToggleButton.addEventListener('click', () => {
+                    // --- 修改後的邏輯 ---
+                    // 1. 直接偵測頁面當前是否為深色模式
+                    const isCurrentlyDark = document.documentElement.classList.contains(CSS_CLASSES.DARK_MODE);
+
+                    // 2. 決定下一個要切換成的主題
+                    const newTheme = isCurrentlyDark ? 'light' : 'dark';
+
+                    // 3. 將新的主題選擇儲存起來
+                    localStorage.setItem('theme', newTheme);
+
+                    // 4. 套用新主題（這個函式會讀取我們剛存好的設定並更新畫面）
+                    applyTheme();
+                });
+            }
 
             document.addEventListener('keydown', (event) => {
                 if (event.key === 'Escape') {
