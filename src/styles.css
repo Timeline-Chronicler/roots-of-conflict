@@ -603,7 +603,8 @@
 		}
 
         .timeline {
-            position: relative; width: 100%; max-width: 800px;
+            position: relative;
+            width: 100%;
             margin-top: 0.5rem;
         }
         .timeline::before {
@@ -612,6 +613,17 @@
             opacity: 0.5; z-index: 1;
             -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 20px), transparent 100%);
             mask-image: linear-gradient(to bottom, black calc(100% - 20px), transparent 100%);
+        }
+
+        /* 控制時間軸事件預設寬度 */
+        .timeline-wrapper {
+            width: 100%;
+            max-width: 800px;
+        }
+
+        /* 控制中文版的寬度 */
+        .lang-zh .timeline-wrapper {
+            max-width: 800px;
         }
 
         .timeline-interruption {
@@ -1305,5 +1317,5 @@
 		
 		/* 針對「第二次起義」時期，手動將年份往下移動，避免被遮擋 */
 		#second_intifada_gaza_disengagement .period-year-overlay {
-		    top: 115rem;
+		    top: 108.5rem;
 		}
