@@ -747,6 +747,11 @@ video {
   --splash-text-primary-light: #27272a;
   --splash-text-secondary-light: #52525b;
   --splash-cta-border-light: #64748b;
+  /* --- 新增：淺色主題的背景圖案 (無黑點) --- */
+  --splash-bg-image-light:
+                radial-gradient(ellipse 80% 70% at 70% 80%, oklch(50% 0.17 265 / 0.22) 0%, oklch(50% 0.17 265 / 0.11) 35%, transparent 70%),
+                radial-gradient(ellipse 70% 50% at 30% 40%, oklch(55% 0.15 285 / 0.18) 0%, oklch(55% 0.15 285 / 0.09) 35%, transparent 70%);
+  --splash-bg-size-light: auto, auto;
   /* --- Dark Mode --- */
   --bg-main-dark: #121212;
   --text-primary-dark: #e4e4e7;
@@ -788,6 +793,12 @@ video {
   --splash-text-primary-dark: #f0f6fc;
   --splash-text-secondary-dark: #c9d1d9;
   --splash-cta-border-dark: #52525b;
+  /* --- 新增這段：深色主題的背景圖案 (有黑點) --- */
+  --splash-bg-image-dark:
+                radial-gradient(circle at 1px 1px, rgba(0,0,0,0.04) 1px, transparent 0),
+                radial-gradient(ellipse 80% 70% at 70% 80%, oklch(50% 0.17 265 / 0.22) 0%, oklch(50% 0.17 265 / 0.11) 35%, transparent 70%),
+                radial-gradient(ellipse 70% 50% at 30% 40%, oklch(55% 0.15 285 / 0.18) 0%, oklch(55% 0.15 285 / 0.09) 35%, transparent 70%);
+  --splash-bg-size-dark: 2px 2px, auto, auto;
   /* --- CSS variable for mobile timeline offset --- */
   --timeline-mobile-offset: 20px;
   --timeline-content-offset: 25px;
@@ -826,6 +837,8 @@ video {
   --splash-text-primary: var(--splash-text-primary-dark);
   --splash-text-secondary: var(--splash-text-secondary-dark);
   --splash-cta-border: var(--splash-cta-border-dark);
+  --splash-bg-image: var(--splash-bg-image-dark);
+  --splash-bg-size: var(--splash-bg-size-dark);
   --ripple-color: rgba(255, 255, 255, 0.2);
 }
 
@@ -864,6 +877,8 @@ html:not(.dark-mode) {
   --splash-text-primary: var(--splash-text-primary-light);
   --splash-text-secondary: var(--splash-text-secondary-light);
   --splash-cta-border: var(--splash-cta-border-light);
+  --splash-bg-image: var(--splash-bg-image-light);
+  --splash-bg-size: var(--splash-bg-size-light);
   --ripple-color: rgba(0, 0, 0, 0.1);
 }
 
@@ -912,11 +927,10 @@ body.modal-is-open {
   opacity: 1;
   visibility: visible;
   background-color: var(--splash-bg);
-  background-image:
-                radial-gradient(circle at 1px 1px, rgba(0,0,0,0.04) 1px, transparent 0),
-                radial-gradient(ellipse 80% 70% at 70% 80%, oklch(50% 0.17 265 / 0.22) 0%, oklch(50% 0.17 265 / 0.11) 35%, transparent 70%),
-                radial-gradient(ellipse 70% 50% at 30% 40%, oklch(55% 0.15 285 / 0.18) 0%, oklch(55% 0.15 285 / 0.09) 35%, transparent 70%);
-  background-size: 2px 2px, auto, auto;
+  background-image: var(--splash-bg-image);
+  /* 使用變數 */
+  background-size: var(--splash-bg-size);
+  /* 使用變數 */
   background-repeat: repeat, no-repeat, no-repeat;
   cursor: pointer;
 }
