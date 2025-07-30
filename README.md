@@ -56,41 +56,24 @@ To run this project on your local machine, please follow these steps:
     npm install
     ```
 
-4.  **Start the development mode**
+4.  **Start the development mode (watch for file changes)**
     ```bash
     npm run dev
     ```
-    This command starts Tailwind's JIT compiler in watch mode. It will monitor your source files (like `index.html`, `src/**/*.js`) for class changes and your input CSS (`src/styles.css`) for direct style modifications, then automatically recompile the output file at `dist/output.css`.
+    This command starts an automated watch service that monitors your source files. When you modify and save a file (like `index.html` or anything in `src/`), the necessary output files in the `dist/` folder will be automatically recompiled.
 
-5.  **Open the `index.html` file with your browser**
-    * **Tip**: It's recommended to use the "Live Server" extension in VS Code for an auto-refreshing browser preview, which makes development much easier.
-    
+5.  **Open the `index.html` file in the project's root directory with your browser**
+    * **Tip**: It's recommended to use the "Live Server" extension in VS Code for an auto-refreshing browser preview.
+
 ## Deployment
 
-This project is deployed on Netlify by pushing the pre-built files to the `main` branch on GitHub. To deploy any new changes, you must follow these steps:
+This project can be automatically deployed on any modern hosting service (like Netlify, Vercel, etc.) that integrates with GitHub.
 
-1.  **Build the project locally**
-    After making your changes, run the build command to generate the final CSS file in the `dist` folder.
-    ```bash
-    npm run build
-    ```
+The required build settings are:
+* **Build Command:** `npm run build`
+* **Publish Directory:** `dist`
 
-2.  **Add all changes to Git**
-    This will include your source code changes and the updated files in the `dist` folder.
-    ```bash
-    git add .
-    ```
-
-3.  **Commit your changes**
-    ```bash
-    git commit -m "Your descriptive update message here"
-    ```
-
-4.  **Push to GitHub**
-    ```bash
-    git push
-    ```
-    Once the push is complete, Netlify will automatically detect the changes in the repository and deploy the new version of your site.
+Any push to the `main` branch will typically trigger a new deployment on the configured hosting service.
     
 ---
 
