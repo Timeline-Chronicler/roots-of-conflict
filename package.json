@@ -5,7 +5,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "tailwind:init": "tailwindcss init -p",
-    "build:css": "tailwindcss -i ./src/styles.css -o ./dist/output.css",
+    "build:css": "tailwindcss -i ./src/styles.css -o ./dist/output.css --minify",
     "build:js": "terser ./src/script.js -o ./dist/script.js -c -m",
     "build:html": "html-minifier-terser ./index.html -o ./dist/index.html --remove-comments --collapse-whitespace",
     "copy:assets": "copyfiles \"images/**/*\" dist",
