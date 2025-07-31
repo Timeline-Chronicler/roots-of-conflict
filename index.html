@@ -36,22 +36,16 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Montserrat:wght@800&family=Open+Sans:wght@300;400;600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./output.css">    <script>
-	    // Anti-flicker script - v2 with System Preference Fallback
+    <link rel="stylesheet" href="./output.css">    
+    <script>
 	    (function() {
-	        // 從儲存空間中讀取使用者手動設定過的主題
 	        const storedTheme = localStorage.getItem('theme');
-	
-	        // 檢查使用者是否有手動設定過
 	        if (storedTheme) {
-	            // 如果有，就根據儲存的設定來決定是否要加上 dark-mode
 	            if (storedTheme === 'dark') {
 	                document.documentElement.classList.add('dark-mode');
 	            }
 	        } else {
-	            // 如果沒有手動設定過 (代表是第一次來訪)，就檢查瀏覽器的色彩偏好設定
 	            if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-	                // 如果瀏覽器偏好是深色，就加上 dark-mode
 	                document.documentElement.classList.add('dark-mode');
 	            }
 	        }
